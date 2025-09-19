@@ -1,0 +1,45 @@
+import time, datetime
+class Event: #creates a base class for Events
+    def __init__(self, name, blurb, date):
+        self.name = name 
+        self.blurb = blurb
+        self.date = date
+	
+
+class EventManager: 
+	def __init__(self):
+		self.events = {} #creates a dictionary to store events
+
+	def AddEvent(self, name, blurb, date):
+		if name in self.events: #checks if the event is already in the dictionary
+			raise ValueError("Event Already Exists")
+		self.events[name] = Event(name, blurb, date) #adds event and makes it an Event class
+		
+	def RemoveEvent(self, name):
+		if name in self.events:
+			del self.events[name] #removes event from the dictionary
+		else:
+			raise ValueError("Event not found")
+		
+	def SearchEvent(self, name):
+		return self.events.get(name, None) #boolean variable to check if the event is in the dictionary or not
+	
+class EventFacade: #facade pattern
+	def __init__(self):
+		self.EventManager = EventManager()
+	def AddEvent(self, name, blurb, date):
+		self.EventManager.AddEvent(name, blurb, date) #uses the add event method from event manager
+	def RemoveEvent(self,name):
+		self.EventManager.RemoveEvent(name) #uses the remove event method
+	def SearchEvent(self, name):
+		return self.EventManager.SearchEvent(name) #uses the search event method
+
+if __name__ == "__main__": #checks if the current script is running in the main program
+	event = EventFacade()
+	
+	event.AddEvent("Greg's Birthday", "Greg Heffley's birthday at his place", "25/12/2025") #adds event
+	event.AddEvent("Manny's Funeral", "MANNY DIED", "1/4/2025") #adds event
+	event.RemoveEvent("Greg's Birthday") #removes events
+current_date = datetime.datetime.fromtimestamp(time.time()) #gets the date time using the dattime function and time fucntion
+print(current_date)
+

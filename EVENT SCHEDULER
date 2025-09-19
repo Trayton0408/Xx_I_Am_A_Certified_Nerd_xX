@@ -1,0 +1,73 @@
+# Event Scheduler Module
+# This module provides functionality to manage events, including adding and removing events.
+
+class Event: # Class to represent an event with a name, date, and time
+    def __init__(self, name, date, time):
+        self.name = name
+        self.date = date
+        self.time = time
+
+    def __str__(self):
+        return f"Event: {self.name}, Date: {self.date}, Time: {self.time}"
+class EventScheduler: #class to manage a list of events
+    def __init__(self):
+        self.events = []
+
+    def add_event(self, name, date, time):  # Method to add an event to the scheduler, but checks first if the event name already exists
+        if name in self.events:
+            raise ValueError("Event with this name already exists.")
+        else:
+            event = Event(name, date, time)
+            self.events.append(event)
+            print(f"Event {event.name} added: {event}")
+            event.is_scheduled = True  # Mark the event as scheduled
+
+    def remove_event(self, name): # Method to remove an event by name 
+        for event in self.events:
+            if event.name == name:
+                self.events.remove(event)
+                event.is_scheduled = False  # Mark the event as not scheduled
+                print(f"Event {event.name} removed.")
+                return
+        raise ValueError("Event not found.")
+
+    def SearchEvent(self, name): # Method to search for an event by name
+        for event in self.events:
+            if event.name == name:
+                return event
+            return None  
+    def list_events(self):  # Method to list all scheduled events
+        if not self.events:
+            print("No events scheduled.")
+        else:
+            print("-- Scheduled Events --")
+            for event in self.events:
+                print(event)
+        
+
+class EventFacade: # Facade class to simplify interaction with the EventScheduler
+    def __init__(self):
+        self.EventScheduler = EventScheduler()
+
+    def add_event(self,name,blurb,date,time):
+        self.EventScheduler.add_event(name, date, time)
+    
+    def remove_event(self, name):
+        self.EventScheduler.remove_event(name)
+
+    def search_event(self, name):
+        return self.EventScheduler.SearchEvent(name)
+
+if __name__ == "__main__": #main function to test the EventScheduler class
+    scheduler = EventScheduler() 
+    #adding an events to the event scheduler module
+    scheduler.add_event("Birthday Party", "04/01/2026", "10:00 AM") 
+    scheduler.add_event("Meeting", "13/06/2025", "2:00 PM") 
+    scheduler.add_event("Conference", "20/09/2025", "9:00 AM")
+    event = scheduler.SearchEvent("Birthday Party")
+    print(f"{event} is scheduled: {event.is_scheduled}")
+
+    scheduler.remove_event("Birthday Party")
+    print(f"{event} is scheduled: {event.is_scheduled}")
+
+    scheduler.list_events()  # List all scheduled events
